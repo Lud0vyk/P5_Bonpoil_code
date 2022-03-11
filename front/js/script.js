@@ -82,15 +82,37 @@ requête json contenant un objet de contact et un tableu produit et order id */
 function AfficherKanap () {
 
     //for (let i = 1;i <= id ; i++)
+
+    /* création de la variable permetant de placer les éléments */
     let affichage = document.getElementById(items);
+
+    /* création des éléments à afficher */
     let lien = document.createElement('a');
     let article = document.createElement('article');
     let image = document.createElement('img');
     let titre = document.createElement('h3');
     let description = document.createElement('p');
 
-    /* append - dernier enfant ou prepend - premier enfant ? */
+    /*création des élément à afficher */
+    lien.textContent = kanap01.id;/* surement pas bon à voir comment faire un lien*/
+
+
+
+    affichage.prepend(lien) {
+
+        /*création de l'article*/
+        affichage.prepend(article) {
+
+
+        }
+    }
+    console.log(affichage);
+    console.log(lien);
+
     
+
+    /* append - dernier enfant ou prepend - premier enfant ? */
+
      
 }
 
