@@ -40,11 +40,12 @@ let kanap08 = new Kanap(8,'kanap08','Dis enim malesuada risus sapien gravida nul
 
 let kanaps = [kanap01,kanap02,kanap03,kanap04,kanap05,kanap06,kanap07,kanap08];
 
-console.log(kanap01);
 const affichage = document.getElementById('items');
-console.log(kanap01.id);
-console.log(kanap01.image());
+
+
+console.log(kanap01);
 console.log(kanap01.altTxt());
+console.log(kanaps[kanap01.id]);
 
 
  /******************************************************************
@@ -69,11 +70,14 @@ requête json contenant un objet de contact et un tableu produit et order id */
  ******************************************************************/
  
 
- //v.3
-affichage.innerHTML = `<a href="http://127.0.0.1:5500/front/html?id=" ${kanap01.id} ">
-<article>
-    <img src=" ${kanap01.image()} " alt=" ${kanap01.altTxt()} + >
-    <h3 class = productName>" ${kanap01.name} </h3>
-    <p class = productDescription> ${kanap01.description} </p>
-</article>
-</a>`;
+ //v.4
+kanaps.forEach ( e => 
+    affichage.innerHTML = `<a href="http://127.0.0.1:5500/front/html/product.html?id=${e.id}" >
+        <article>
+            <img src="${e.image()}" alt="${e.altTxt()}" >
+            <h3 class=productName> ${e.name} </h3>
+            <p class=productDescription> ${e.description} </p>
+        </article>
+    </a>`);
+
+//console.log(e);   
