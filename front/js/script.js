@@ -2,51 +2,33 @@
  ***                    DECLARATION VARIABLES                   ***
  ******************************************************************/
 
- //v.6
-class Kanap {
-    constructor (id,name,description,color,price){
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.color = color;
-        this.price = price;
-    }
-
-    getImage() {
-        let image = "../../back/images/" + this.name + ".jpeg";
-        return image;
-    }
-    get image() {
-        return this.getImage;
-    }
-    getAltTxt() {
-        let altTxt = "Photographie d'un canapé, " + this.color + ".";
-        return altTxt;
-    }
-    get altTxt() {
-        return this.getAltTxt;
-    }
-
-}
-//v.2
-let kanap01 = new Kanap(1,'kanap01','Dis enim malesuada risus sapien gravida nulla nisl arcu.','bleu',42);
-let kanap02 = new Kanap(2,'kanap02','Dis enim malesuada risus sapien gravida nulla nisl arcu.','jaune',142);
-let kanap03 = new Kanap(3,'kanap03','Dis enim malesuada risus sapien gravida nulla nisl arcu.','vert',72);
-let kanap04 = new Kanap(4,'kanap04','Dis enim malesuada risus sapien gravida nulla nisl arcu.','mauve',32);
-let kanap05 = new Kanap(5,'kanap05','Dis enim malesuada risus sapien gravida nulla nisl arcu.','gris',150);
-let kanap06 = new Kanap(6,'kanap06','Dis enim malesuada risus sapien gravida nulla nisl arcu.','noir',100);
-let kanap07 = new Kanap(7,'kanap07','Dis enim malesuada risus sapien gravida nulla nisl arcu.','rouge',62);
-let kanap08 = new Kanap(8,'kanap08','Dis enim malesuada risus sapien gravida nulla nisl arcu.','rose',88);
-
-let kanaps = [kanap01,kanap02,kanap03,kanap04,kanap05,kanap06,kanap07,kanap08];
-
 const affichage = document.getElementById('items');
+main();
+//http://localhost:3000/api/products
 
+async function main (){
+    const products = await getProduct();
+    for(product of products) {
+        showProduct(product);
+    }
+}
+function getProduct(){
+    return fetch('http://localhost:3000/api/products/')
+    .then( function(reponse) { return reponse.json()})
+    .then( function(products) { return products})
+    .catch(function (error) {alert ('error product')})
+}
 
-console.log(kanap01);
-console.log(kanap01.altTxt());
-console.log(kanaps[kanap01.id]);
-
+function showProduct (product) {
+    affichage.innerHTML += `<a href="./product.html?id=${product._id}" >
+        <article>
+            <img src="${product.imageUrl}" alt="${product.altTxt}" >
+            <h3 class=productName> ${product.name} </h3>
+            <p class=productDescription> ${product.description} </p>
+        </article>
+    </a>`;
+    console.log(product);
+}
 
  /******************************************************************
  ***                          FONCTIONS                         ***
@@ -60,7 +42,29 @@ revoie l'élément correspondant à l'id du produit */
 /* fonction 3 post /order
 requête json contenant un objet de contact et un tableu produit et order id */
 
+async function main (){
+    const products = await getProduct();
+    for(product of products) {
+        showProduct(product);
+    }
+}
+function getProduct(){
+    return fetch('http://localhost:3000/api/products/')
+    .then( function(reponse) { return reponse.json()})
+    .then( function(products) { return products})
+    .catch(function (error) {alert ('error product')} )
+}
 
+function showProduct (product) {
+    console.log(product);
+    affichage.innerHTML += `<a href="./product.html?id=${product._id}" >
+        <article>
+            <img src="${product.imageUrl}" alt="${product.altTxt}" >
+            <h3 class=productName> ${product.name} </h3>
+            <p class=productDescription> ${product.description} </p>
+        </article>
+    </a>`;
+}
 
      
 
@@ -70,14 +74,5 @@ requête json contenant un objet de contact et un tableu produit et order id */
  ******************************************************************/
  
 
- //v.4
-kanaps.forEach ( e => 
-    affichage.innerHTML = `<a href="http://127.0.0.1:5500/front/html/product.html?id=${e.id}" >
-        <article>
-            <img src="${e.image()}" alt="${e.altTxt()}" >
-            <h3 class=productName> ${e.name} </h3>
-            <p class=productDescription> ${e.description} </p>
-        </article>
-    </a>`);
 
-//console.log(e);   
+
