@@ -15,3 +15,7 @@ server runs on another port for any reason, this is printed to the
 console when the server starts, e.g. `Listening on port 3001`.
 
 http://localhost:3000/api/products
+
+terminal :
+$ cd back
+$ node server
