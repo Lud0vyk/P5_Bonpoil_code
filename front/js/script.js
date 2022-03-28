@@ -45,6 +45,7 @@ requête json contenant un objet de contact et un tableu produit et order id */
 //let product;
 main();
 
+//fonction asynchrone pour récupérer les produits
 async function main (){
     const products = await getProduct();
     for(product of products) {
@@ -52,6 +53,7 @@ async function main (){
     }
 }
 
+//fonction pour récupérer les produits
 function getProduct(){
     return fetch('http://localhost:3000/api/products/')
     .then( function(reponse) { return reponse.json()})
@@ -59,6 +61,7 @@ function getProduct(){
     .catch(function (error) {alert ('error product')} )
 }
 
+//création des balises HTML pour l'affichage
 function showProduct (product) {
     
     showKanap.innerHTML += `<a href="./product.html?id=${product._id}" >
@@ -69,7 +72,7 @@ function showProduct (product) {
         </article>
     </a>`;
 }
-
+console.log(product);
      
 
  
@@ -77,6 +80,12 @@ function showProduct (product) {
  ***                       CODE PRINCIPAL                       ***
  ******************************************************************/
  
-
+//fonction asynchrone pour le choix des couleurs
+async function productChoice (){
+    const products = await getProduct();
+    for(product of products) {
+        showProduct(product);
+    }
+}
 
 
