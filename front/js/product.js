@@ -4,7 +4,7 @@
  ******************************************************************/
 
 
- const kanapImage = document.getElementsByClassName('.item__img');
+ const kanapImage = document.getElementsByClassName('item__img');
  const kanapTitre = document.getElementById('title');
  const kanapPrice = document.getElementById('price');
  const kanapDescription = document.getElementById('description');
@@ -21,7 +21,7 @@
 // affichage des l'éléments dans product.html
 function showProductById (product) {
      
-    kanapImage.innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}" >`;
+    kanapImage[0].innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}" >`;
     kanapTitre.innerText = `(${product.name})`;
     kanapPrice.innerText = `(${product.price})`;
     kanapDescription.innerText = `(${product.description})`;
@@ -70,13 +70,35 @@ function showProductById (product) {
   let cart = {
     productId : productChoice._id,
     productColor : selectedColor,
-    productQuantity : selectedQuantity,
-    productPrice : productChoice.price,
-    totalPrice : selectedQuantity * productChoice.price
+    productQuantity : selectedQuantity
     //voir si besoin d'autre chose
     }
 
     console.log(cart);
+
+
+    
+    /* *** stockage des données *** */
+    /* *** méthodes :   clear()     getItem()   key()     removeItem()      setItem()           *** */
+    /* ***** SessionStorage ou LocalStorage ***** */
+
+    /* déclaration de la variable à envoyer dans le LocalStorage */
+    let sendCartToLocalStorage = JSON.parse(localStorage.getItem("cart"))
+
+    //si il y a déjà un produit dans le localStorage
+    if(sendCartToLocalStorage) {
+        sendCartToLocalStorage.push(cart);
+        localStorage.setItem("cart", JSON.stringify(sendCartToLocalStorage));
+        console.log(sendCartToLocalStorage);
+
+    //si il n'y a rien dans le localStorage
+    } else {
+        sendCartToLocalStorage = [];
+        sendCartToLocalStorage.push(cart);
+        localStorage.setItem("cart", JSON.stringify(sendCartToLocalStorage));
+        console.log(sendCartToLocalStorage);
+    }
+
  });
 
 
