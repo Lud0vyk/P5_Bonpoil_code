@@ -1,10 +1,20 @@
-//script.js
+//cart.js
 /******************************************************************
  ***                    DECLARATION VARIABLES                   ***
  ******************************************************************/
 
-
+ //récupération des éléments HTML pour l'affichage
  const showCart = document.getElementById('cart__items');
+
+ const totalQuantity = document.getElementById('totalQuantity');
+ const totalPrice = document.getElementById('price');
+
+ //création des variables clients
+ let firstName;
+ let lastName;
+ let address;
+ let city;
+ let email;
 
 
  //fonction asynchrone pour récupérer les produits et les afficher
@@ -50,7 +60,7 @@
     //console.log(product);
  }
 
- 
+
 
 /******************************************************************
  ***                          FONCTIONS                         ***
@@ -72,6 +82,6 @@
  ***                       CODE PRINCIPAL                       ***
  ******************************************************************/
  
- //fonction principale 
-
+ //fonction principale de la page cart
+ mainCart();
 
