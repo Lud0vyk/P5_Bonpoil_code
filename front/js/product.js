@@ -66,18 +66,17 @@
  addToCart.addEventListener("click", (event) => {
     event.preventDefault();
 
- //récupération de la couleur
- const selectedColor = colorKanap.value;
- //récupération de la quantité
- const selectedQuantity = quantityKanap.value;
+    //récupération de la couleur
+    const selectedColor = colorKanap.value;
+    //récupération de la quantité
+    const selectedQuantity = quantityKanap.value;
 
- //récupartion du panier
- let cart = {
-   productId : productChoice._id,
-   productColor : selectedColor,
-   productQuantity : selectedQuantity
-   //voir si besoin d'autre chose
-   }
+    //récupartion des valeurs du formulaire
+    let cart = {
+        productId : productChoice._id,
+        productColor : selectedColor,
+        productQuantity : selectedQuantity
+    }
    
    /* *** stockage des données *** */
 
@@ -95,29 +94,28 @@
     }
 
     /* déclaration de la variable à envoyer dans le LocalStorage */
-    let sendCartToLocalStorage = JSON.parse(localStorage.getItem("cart"))
+    let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"))
 
     //si les condition ne sont pas réuni
     if(selectedColor == "" || selectedQuantity == 0) {
         window.alert(`Veuillez choisir une couleur et une quantité`);
         window.location.href = `product.html?id=${productChoice._id}`;
-
+    }
+    
     //si il y a déjà un produit dans le localStorage
-    } else if(sendCartToLocalStorage) {
-        sendCartToLocalStorage.push(cart);
-        localStorage.setItem("cart", JSON.stringify(sendCartToLocalStorage));
-        console.log(sendCartToLocalStorage);
+    if(cartToLocalStorage) {
+        cartToLocalStorage.push(cart);
+        localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
         popup();
 
     //si il n'y a rien dans le localStorage
     } else {
-        sendCartToLocalStorage = [];
-        sendCartToLocalStorage.push(cart);
-        localStorage.setItem("cart", JSON.stringify(sendCartToLocalStorage));
-        console.log(sendCartToLocalStorage);
+        cartToLocalStorage = [];
+        cartToLocalStorage.push(cart);
+        localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
         popup();
     }
-
+    //console.log(cartToLocalStorage);
  });
 
 

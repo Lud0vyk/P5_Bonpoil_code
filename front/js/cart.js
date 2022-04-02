@@ -16,13 +16,20 @@
  let city;
  let email;
 
+  // déclaration de la variable du LocalStorage pour récupérer les données du panier
+  let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"));
+  console.log(cartToLocalStorage);
+  console.log(localStorage);
+  
+   //variable pour pouvoir utiliser ce qu'il y a dans le panier
+   let elementOfCart = [];
 
  //fonction asynchrone pour récupérer les produits et les afficher
  async function mainCart (){
     const products = await getProduct();
-    for(let pieceOfCart of cart) {
+    /*for(let pieceOfCart of cart) {
         showCart(pieceOfCart);
-    }
+    }*/
  }
  
  //fonction pour récupérer les produits
