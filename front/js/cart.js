@@ -16,20 +16,21 @@
  let city;
  let email;
 
-  // déclaration de la variable du LocalStorage pour récupérer les données du panier
-  let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"));
-  console.log(cartToLocalStorage);
-  console.log(localStorage);
-  
-   //variable pour pouvoir utiliser ce qu'il y a dans le panier
-   let elementOfCart = [];
+ // déclaration de la variable du LocalStorage pour récupérer les données du panier
+ let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"));
 
- //fonction asynchrone pour récupérer les produits et les afficher
- async function mainCart (){
+  
+ //variable pour pouvoir utiliser ce qu'il y a dans le panier
+ let elementsOfCart = [];
+
+
+ 
+  //fonction asynchrone pour récupérer les produits et les afficher
+  async function mainCart() {
     const products = await getProduct();
-    /*for(let pieceOfCart of cart) {
-        showCart(pieceOfCart);
-    }*/
+    cartElements(products);
+    showCart(elementsOfCart);
+    //return products;
  }
  
  //fonction pour récupérer les produits
@@ -40,32 +41,66 @@
      .catch( function (error) {alert ('error product')} )
  }
 
- //création des balises HTML pour l'affichage
- function showProduct (product) {
-    
-    showKanap.innerHTML += `<article class="cart__item" data-id="${productID}" data-color="${productcolor}">
-        <div class="cart__item__img">
-            <img src="${productID}" alt="${productID}">
-        </div>
-        <div class="cart__item__content">
-            <div class="cart__item__content__description">
-                <h2>${productID}</h2>
-                <p>${productID}</p>
-                <p>${productID}</p>
+ //fonction qui met dans une variable les éléments récupéré dans le localStorage
+//et qui corespond à ceux de products retrouvé grace à id
+function cartElements(products) {
+
+    let productById;
+
+    //a faire si besoin et à revoir
+    if(cartToLocalStorage === null) {
+        //alert("Votre panier est vide");
+        console.log("Le panier est vide");
+    } else {
+        console.log("Le panier n'est pas vide");
+
+        for (let i = 0; i < cartToLocalStorage.length; i++) {
+
+            productById = products.find( (element)=> element._id === cartToLocalStorage[i].productId);
+
+            elementsOfCart[i] = {
+                id : productById._id,
+                name : productById.name,
+                color : cartToLocalStorage[i].productColor,
+                quantity : cartToLocalStorage[i].productQuantity,
+                price : productById.price,
+                img : productById.imageUrl,
+                alt : productById.altTxt
+            }
+        }
+        return elementsOfCart;
+    }
+}
+
+
+// affichage des éléments dans l'HTML
+function showCart(elementsOfCart) {
+
+    for(let j = 0; j < elementsOfCart.length; j++) {
+        
+        cart__items.innerHTML += `<article class="cart__item" data-id="${elementsOfCart[j].id}" data-color="${elementsOfCart[j].color}">
+            <div class="cart__item__img">
+                <img src="${elementsOfCart[j].img}" alt="${elementsOfCart[j].alt}">
             </div>
-            <div class="cart__item__content__settings">
-                <div class="cart__item__content__settings__quantity">
-                    <p>Qté : ${productID}</p>
-                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+            <div class="cart__item__content">
+                <div class="cart__item__content__description">
+                    <h2>${elementsOfCart[j].name}</h2>
+                    <p>${elementsOfCart[j].color}</p>
+                    <p>${elementsOfCart[j].price} €</p>
                 </div>
-                <div class="cart__item__content__settings__delete">
-                    <p class="deleteItem">Supprimer</p>
+                <div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                        <p>Qté : ${elementsOfCart[j].quantity}</p>
+                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${elementsOfCart[j].quantity}">
+                    </div>
+                    <div class="cart__item__content__settings__delete">
+                        <p class="deleteItem">Supprimer</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>`
-    //console.log(product);
- }
+        </article>`
+    }
+}
 
 
 
