@@ -98,10 +98,72 @@ function showCart(elementsOfCart) {
                     </div>
                 </div>
             </div>
-        </article>`
+        </article>`;
     }
 }
 
+
+
+/* *** *** *** bouton supprimer et changement de quantité *** *** *** */
+
+
+
+    //bouton pour supprimer les données
+    const deleteItem = [];
+    deleteItem[j] = document.querySelectorAll(".deleteItem");
+    
+    console.log("deleteItem");
+    console.log(deleteItem);
+
+    
+
+
+
+
+ //bouton pour supprimer les données
+ /*
+ const deleteItem = document.querySelectorAll(".deleteItem");
+ console.log("deleteItem");
+ console.log(deleteItem);
+*/
+
+
+
+//suppression d'un article
+for(let k = 0; k < elementsOfCart.length; k++) {
+
+    deleteItem[j].addEventListener("click", (event) => {
+        event.preventDefault();
+
+        if (window.confirm(`${productChoice.name}
+        Souhaitez vous retirer cette article ? ${elementsOfCart[j].name}`)) {
+
+        window.location.href = "cart.html";
+
+        } else {
+            window.location.href = "cart.html";
+        }
+
+    }
+}
+
+
+ // nouvelle fonction popup pour avertir de la suppression
+ //fenêtre popup qui s'ouvre
+ /*
+ function popup() {
+
+    if(window.confirm(`${productChoice.name}
+        Souhaitez vous retirer cette article ? ${selectedColor}`)) {
+        window.location.href = "cart.html";
+        return true;
+   
+    } else {
+        window.location.href = "cart.html";
+        return false;
+    }
+ }
+*/
 
 
 /******************************************************************
