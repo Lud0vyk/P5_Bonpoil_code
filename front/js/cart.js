@@ -110,7 +110,7 @@ function showCart(elementsOfCart) {
 
     //bouton pour supprimer les données
     const deleteItem = [];
-    deleteItem[j] = document.querySelectorAll(".deleteItem");
+    deleteItem[] = document.querySelectorAll(".deleteItem");
     
     console.log("deleteItem");
     console.log(deleteItem);
@@ -164,6 +164,33 @@ for(let k = 0; k < elementsOfCart.length; k++) {
     }
  }
 */
+
+
+/* ----- ----- ----- ----- ----- Envoi du formulaire ----- ----- ----- ----- ----- */
+
+ // bouton pour envoyer les données
+ const order = document.querySelector("#order");
+ console.log("order");
+ console.log(order);
+
+
+order.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    //création des variables clients
+    let form = {
+        firstName : document.querySelector("#firstName").value,
+        lastName : document.querySelector("#lastName").value,
+        address : document.querySelector("#address").value,
+        city : document.querySelector("#city").value,
+        email : document.querySelector("#email").value
+    }
+    console.log("form");
+    console.log(form);
+
+    localStorage.setItem("form", JSON.stringify(form));
+
+});
 
 
 /******************************************************************
