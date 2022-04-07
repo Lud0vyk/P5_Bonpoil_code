@@ -110,7 +110,7 @@ function showCart(elementsOfCart) {
 
     //bouton pour supprimer les données
     const deleteItem = [];
-    deleteItem[] = document.querySelectorAll(".deleteItem");
+    //deleteItem[] = document.querySelectorAll(".deleteItem");
     
     console.log("deleteItem");
     console.log(deleteItem);
@@ -144,7 +144,7 @@ for(let k = 0; k < elementsOfCart.length; k++) {
             window.location.href = "cart.html";
         }
 
-    }
+    });
 }
 
 
@@ -190,7 +190,65 @@ order.addEventListener("click", (event) => {
 
     localStorage.setItem("form", JSON.stringify(form));
 
+    // vérification du formulaire
+    switch ("") {
+
+        case form.firstName :
+            window.alert("Prénom manquant !");
+            break;
+
+        case form.lastName :
+            window.alert("Nom manquant !");
+            break;
+
+        case form.address :
+            window.alert("Adresse manquante !");
+            break;
+
+        case form.city :
+            window.alert("Ville manquante !");
+            break;
+
+        case form.email :
+            window.alert("Courriel manquant !");
+            break;
+
+        default:
+            
+        // utilisation des regex pour vérifier les données du formulaire
+        if( !(/^[A-Za-z]{1,20}$/.test(form.firstName)) ){
+            window.alert("Prénom incorrect !");
+            document.querySelector("#firstNameErrorMsg").textContent = "Veuillez remplir ce champ.";
+        
+        } else if( !(/^[A-Za-z]{1,20}$/.test(form.lastName)) ){
+            window.alert("Nom incorrect !");
+            document.querySelector("#lastNameErrorMsg").textContent = "Veuillez remplir ce champ.";
+
+        } else if( !(/^[A-Za-z]{1,20}$/.test(form.city)) ){
+            window.alert("Ville incorrecte !");
+            document.querySelector("#cityErrorMsg").textContent = "Veuillez remplir ce champ.";
+
+        } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(form.address)) ){
+            window.alert("Adresse incorrecte !");
+            document.querySelector("#addressErrorMsg").textContent = "Veuillez remplir ce champ.";
+
+        } else if( !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(form.email)) ){
+            window.alert("Courriel incorrecte !");
+            document.querySelector("#emailErrorMsg").textContent = "Veuillez remplir ce champ.";
+
+        } else {
+            document.querySelector("#firstNameErrorMsg").textContent = "";
+            document.querySelector("#lastNameErrorMsg").textContent = "";
+            document.querySelector("#cityErrorMsg").textContent = "";
+            document.querySelector("#addressErrorMsg").textContent = "";
+            document.querySelector("#emailErrorMsg").textContent = "";
+            //localStorage.setItem("form", JSON.stringify(form));
+            console.log("ok");
+        }
+    }
+    
 });
+
 
 
 /******************************************************************
