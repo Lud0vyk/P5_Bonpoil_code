@@ -178,61 +178,57 @@ order.addEventListener("click", (event) => {
     event.preventDefault();
 
     //création des variables clients
-    let form = {
+    let contact = {
         firstName : document.querySelector("#firstName").value,
         lastName : document.querySelector("#lastName").value,
         address : document.querySelector("#address").value,
         city : document.querySelector("#city").value,
         email : document.querySelector("#email").value
     }
-    console.log("form");
-    console.log(form);
-
-    localStorage.setItem("form", JSON.stringify(form));
 
     // vérification du formulaire
     switch ("") {
 
-        case form.firstName :
+        case contact.firstName :
             window.alert("Prénom manquant !");
             break;
 
-        case form.lastName :
+        case contact.lastName :
             window.alert("Nom manquant !");
             break;
 
-        case form.address :
+        case contact.address :
             window.alert("Adresse manquante !");
             break;
 
-        case form.city :
+        case contact.city :
             window.alert("Ville manquante !");
             break;
 
-        case form.email :
+        case contact.email :
             window.alert("Courriel manquant !");
             break;
 
         default:
             
         // utilisation des regex pour vérifier les données du formulaire
-        if( !(/^[A-Za-z]{1,20}$/.test(form.firstName)) ){
+        if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
             window.alert("Prénom incorrect !");
             document.querySelector("#firstNameErrorMsg").textContent = "Veuillez remplir ce champ.";
         
-        } else if( !(/^[A-Za-z]{1,20}$/.test(form.lastName)) ){
+        } else if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
             window.alert("Nom incorrect !");
             document.querySelector("#lastNameErrorMsg").textContent = "Veuillez remplir ce champ.";
 
-        } else if( !(/^[A-Za-z]{1,20}$/.test(form.city)) ){
+        } else if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
             window.alert("Ville incorrecte !");
             document.querySelector("#cityErrorMsg").textContent = "Veuillez remplir ce champ.";
 
-        } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(form.address)) ){
+        } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(contact.address)) ){
             window.alert("Adresse incorrecte !");
             document.querySelector("#addressErrorMsg").textContent = "Veuillez remplir ce champ.";
 
-        } else if( !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(form.email)) ){
+        } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(contact.email))/*!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email))*/ ){
             window.alert("Courriel incorrecte !");
             document.querySelector("#emailErrorMsg").textContent = "Veuillez remplir ce champ.";
 
@@ -242,11 +238,36 @@ order.addEventListener("click", (event) => {
             document.querySelector("#cityErrorMsg").textContent = "";
             document.querySelector("#addressErrorMsg").textContent = "";
             document.querySelector("#emailErrorMsg").textContent = "";
-            //localStorage.setItem("form", JSON.stringify(form));
-            console.log("ok");
+            localStorage.setItem("contact", JSON.stringify(contact));
         }
     }
+
+     // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
+    let commande = {
+        elementsOfCart,
+        contact
+    }
+
+    let promise = fetch("http://localhost:3000/api/products/", {
+        method : "POST",
+        body : JSON.stringify(commande),
+        headers : { "Content-type" : "application/json" }
+    });
+
+    promise.then(async(response)=> {
+
+        try {
+            console.log("promise");
+            console.log(promise);
+            let commande = await response.json();
+            console.log("commande");
+            console.log(commande);
     
+        } catch(error) {
+            console.log(error);
+        }
+    });
+   
 });
 
 
