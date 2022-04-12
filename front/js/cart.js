@@ -4,17 +4,9 @@
  ******************************************************************/
 
  //récupération des éléments HTML pour l'affichage
- const showCart = document.getElementById('cart__items');
-
+ const cart__items = document.getElementById('cart__items');
  const totalQuantity = document.getElementById('totalQuantity');
  const totalPrice = document.getElementById('price');
-
- //création des variables clients
- let firstName;
- let lastName;
- let address;
- let city;
- let email;
 
  // déclaration de la variable du LocalStorage pour récupérer les données du panier
  let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"));
@@ -30,19 +22,19 @@
     const products = await getProduct();
     cartElements(products);
     showCart(elementsOfCart);
-    //return products;
  }
  
+
  //fonction pour récupérer les produits
  function getProduct(){
-     return fetch('http://localhost:3000/api/cart/')
+     return fetch('http://localhost:3000/api/products/')
      .then( function(reponse) { return reponse.json()})
      .then( function(products) { return products})
      .catch( function (error) {alert ('error product')} )
  }
 
  //fonction qui met dans une variable les éléments récupéré dans le localStorage
-//et qui corespond à ceux de products retrouvé grace à id
+//et qui correspond à ceux de products retrouvé grace à id
 function cartElements(products) {
 
     let productById;
@@ -76,7 +68,14 @@ function cartElements(products) {
 // affichage des éléments dans l'HTML
 function showCart(elementsOfCart) {
 
+    // variables pour faire les calcules
+    let totalP = 0;
+    let totalQ = 0;
+
     for(let j = 0; j < elementsOfCart.length; j++) {
+
+        // a voir si besoin de changement
+        let newQuantity = elementsOfCart[j].quantity;
         
         cart__items.innerHTML += `<article class="cart__item" data-id="${elementsOfCart[j].id}" data-color="${elementsOfCart[j].color}">
             <div class="cart__item__img">
@@ -91,7 +90,7 @@ function showCart(elementsOfCart) {
                 <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                         <p>Qté : ${elementsOfCart[j].quantity}</p>
-                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${elementsOfCart[j].quantity}">
+                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${newQuantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
                         <p class="deleteItem">Supprimer</p>
@@ -99,7 +98,21 @@ function showCart(elementsOfCart) {
                 </div>
             </div>
         </article>`;
+
+        totalQ +=  parseInt(elementsOfCart[j].quantity);
+        totalP +=  elementsOfCart[j].price * parseInt(elementsOfCart[j].quantity);
+
     }
+
+    totalQuantity.innerText = `( ${parseInt(totalQ)} )`;
+    totalPrice.innerText = `( ${totalP} )`;
+
+
+    //bouton pour supprimer les données
+    let deleteItem = document.querySelectorAll("p.deleteItem");
+
+    // appelle de la fonction de suppression
+    deleteItemOfCart(deleteItem);
 }
 
 
@@ -108,24 +121,37 @@ function showCart(elementsOfCart) {
 
 
 
-    //bouton pour supprimer les données
-    const deleteItem = [];
-    //deleteItem[] = document.querySelectorAll(".deleteItem");
+//suppression d'un article    !!!! PAS FINI !!!!!
+function deleteItemOfCart(deleteItem) { 
+   
+    for(let k = 0; k < deleteItem.length; k++) {
+
+        deleteItem[k].addEventListener("click", (event) => {
+            event.preventDefault();
     
-    console.log("deleteItem");
-    console.log(deleteItem);
-
+            // sélection de l'id du produit lors du clic
+            let itemRemoveById = elementsOfCart[k].id;
+            console.log("itemRemoveById");
+            console.log(itemRemoveById);
     
-
-
-
-
- //bouton pour supprimer les données
- /*
- const deleteItem = document.querySelectorAll(".deleteItem");
- console.log("deleteItem");
- console.log(deleteItem);
-*/
+            elementsOfCart = elementsOfCart.splice(k);
+            console.log("elementsOfCart");
+            console.log(elementsOfCart);
+           // localStorage.set
+    /*
+            if (window.confirm(`${itemRemoveById[k]}
+            Souhaitez vous retirer cette article ? ${elementsOfCart[k].name}`)) {
+    
+                elementsOfCart = elementsOfCart.slice(k);
+                window.location.href = "cart.html";
+    
+            } else {
+                window.location.href = "cart.html";
+            }
+    */
+        });
+    }
+}
 
 
 
@@ -242,13 +268,30 @@ order.addEventListener("click", (event) => {
         }
     }
 
-     // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
+
+    let product = [];
+    for(let i = 0; elementsOfCart.length > i; i++  ) {
+
+        for(let j = 0; elementsOfCart[i].quantity > j; j++ ) {
+
+            product.push(elementsOfCart[i].id);
+            
+        }
+
+    }
+    console.log("product");
+    console.log(product);
+
+    console.log("contact");
+    console.log(contact);
+
+    // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
     let commande = {
-        elementsOfCart,
-        contact
+        products : product,
+        contact : contact
     }
 
-    let promise = fetch("http://localhost:3000/api/products/", {
+    let promise = fetch("http://localhost:3000/api/products/order/", {
         method : "POST",
         body : JSON.stringify(commande),
         headers : { "Content-type" : "application/json" }
@@ -257,17 +300,13 @@ order.addEventListener("click", (event) => {
     promise.then(async(response)=> {
 
         try {
-            console.log("promise");
-            console.log(promise);
-            let commande = await response.json();
-            console.log("commande");
-            console.log(commande);
-    
+
+            let orderResponse = await response.json();
+
         } catch(error) {
             console.log(error);
         }
-    });
-   
+    });  
 });
 
 
