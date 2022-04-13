@@ -155,22 +155,44 @@ function deleteItemOfCart(deleteItem) {
 
 
 
-//suppression d'un article
-for(let k = 0; k < elementsOfCart.length; k++) {
+//suppression d'un article   !!!! PAS FINI !!!!!
+function deleteItemOfCart(deleteItem) {
 
-    deleteItem[j].addEventListener("click", (event) => {
-        event.preventDefault();
+    let cartToLocalStorage2 = [];
+   
+    for(let k = 0; k < deleteItem.length; k++) {
 
-        if (window.confirm(`${productChoice.name}
-        Souhaitez vous retirer cette article ? ${elementsOfCart[j].name}`)) {
+        deleteItem[k].addEventListener("click", (event) => {
+            event.preventDefault();
+    
+            // sélection de l'id du produit lors du clic
+            let itemRemoveById = elementsOfCart[k].id;
+            let itemRemoveByColor = elementsOfCart[k].color;
+            console.log("itemRemoveById");
+            console.log(itemRemoveById);
+            console.log(itemRemoveByColor);
+    
+            //elementsOfCart = elementsOfCart.splice(k);
+            
+           // localStorage.set
+    
+            if ( window.confirm(`Souhaitez vous retirer ${elementsOfCart[k].name} de votre liste ? `)) {
+    
+                cartToLocalStorage2 = cartToLocalStorage.filter( element => 
+                    element.id !== itemRemoveById && element.color !== itemRemoveByColor);
+                cartToLocalStorage = cartToLocalStorage2;
+                
+                // mise à jour du panier dans le local storage
+                localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
+                window.location.href = "cart.html";
 
-        window.location.href = "cart.html";
-
-        } else {
-            window.location.href = "cart.html";
-        }
-
-    });
+            } else {
+                window.location.href = "cart.html";
+            }
+        });
+    }
+    console.log("cartToLocalStorage");
+    console.log(cartToLocalStorage);
 }
 
 
@@ -268,22 +290,14 @@ order.addEventListener("click", (event) => {
         }
     }
 
-
     let product = [];
-    for(let i = 0; elementsOfCart.length > i; i++  ) {
+    for(let l = 0; elementsOfCart.length > l; l++ ) {
 
-        for(let j = 0; elementsOfCart[i].quantity > j; j++ ) {
+        for(let m = 0; elementsOfCart[l].quantity > m; m++ ) {
 
-            product.push(elementsOfCart[i].id);
-            
+            product.push(elementsOfCart[l].id); 
         }
-
     }
-    console.log("product");
-    console.log(product);
-
-    console.log("contact");
-    console.log(contact);
 
     // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
     let commande = {
@@ -300,7 +314,6 @@ order.addEventListener("click", (event) => {
     promise.then(async(response)=> {
 
         try {
-
             let orderResponse = await response.json();
 
         } catch(error) {
