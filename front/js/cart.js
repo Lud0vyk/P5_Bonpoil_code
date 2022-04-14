@@ -101,12 +101,10 @@ function showCart(elementsOfCart) {
 
         totalQ +=  parseInt(elementsOfCart[j].quantity);
         totalP +=  elementsOfCart[j].price * parseInt(elementsOfCart[j].quantity);
-
     }
 
     totalQuantity.innerText = `( ${parseInt(totalQ)} )`;
     totalPrice.innerText = `( ${totalP} )`;
-
 
     //bouton pour supprimer les données
     let deleteItem = document.querySelectorAll("p.deleteItem");
@@ -119,69 +117,21 @@ function showCart(elementsOfCart) {
 
 /* *** *** *** bouton supprimer et changement de quantité *** *** *** */
 
-
-
-//suppression d'un article    !!!! PAS FINI !!!!!
-function deleteItemOfCart(deleteItem) { 
-   
-    for(let k = 0; k < deleteItem.length; k++) {
-
-        deleteItem[k].addEventListener("click", (event) => {
-            event.preventDefault();
-    
-            // sélection de l'id du produit lors du clic
-            let itemRemoveById = elementsOfCart[k].id;
-            console.log("itemRemoveById");
-            console.log(itemRemoveById);
-    
-            elementsOfCart = elementsOfCart.splice(k);
-            console.log("elementsOfCart");
-            console.log(elementsOfCart);
-           // localStorage.set
-    /*
-            if (window.confirm(`${itemRemoveById[k]}
-            Souhaitez vous retirer cette article ? ${elementsOfCart[k].name}`)) {
-    
-                elementsOfCart = elementsOfCart.slice(k);
-                window.location.href = "cart.html";
-    
-            } else {
-                window.location.href = "cart.html";
-            }
-    */
-        });
-    }
-}
-
-
-
-//suppression d'un article   !!!! PAS FINI !!!!!
+//suppression d'un article
 function deleteItemOfCart(deleteItem) {
-
-    let cartToLocalStorage2 = [];
    
     for(let k = 0; k < deleteItem.length; k++) {
 
         deleteItem[k].addEventListener("click", (event) => {
             event.preventDefault();
     
-            // sélection de l'id du produit lors du clic
-            let itemRemoveById = elementsOfCart[k].id;
-            let itemRemoveByColor = elementsOfCart[k].color;
-            console.log("itemRemoveById");
-            console.log(itemRemoveById);
-            console.log(itemRemoveByColor);
-    
-            //elementsOfCart = elementsOfCart.splice(k);
-            
-           // localStorage.set
-    
+            // fenêtre de popup pour avertir l'utilisateur de la suppression
             if ( window.confirm(`Souhaitez vous retirer ${elementsOfCart[k].name} de votre liste ? `)) {
     
-                cartToLocalStorage2 = cartToLocalStorage.filter( element => 
-                    element.id !== itemRemoveById && element.color !== itemRemoveByColor);
-                cartToLocalStorage = cartToLocalStorage2;
-                
+                // suppression de l'élément
+                cartToLocalStorage[k] = null;
+                // filtrage de l'élément null
+                cartToLocalStorage = cartToLocalStorage.filter( element => element !== null );
                 // mise à jour du panier dans le local storage
                 localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
                 window.location.href = "cart.html";
@@ -191,27 +141,7 @@ function deleteItemOfCart(deleteItem) {
             }
         });
     }
-    console.log("cartToLocalStorage");
-    console.log(cartToLocalStorage);
 }
-
-
- // nouvelle fonction popup pour avertir de la suppression
- //fenêtre popup qui s'ouvre
- /*
- function popup() {
-
-    if(window.confirm(`${productChoice.name}
-        Souhaitez vous retirer cette article ? ${selectedColor}`)) {
-        window.location.href = "cart.html";
-        return true;
-   
-    } else {
-        window.location.href = "cart.html";
-        return false;
-    }
- }
-*/
 
 
 /* ----- ----- ----- ----- ----- Envoi du formulaire ----- ----- ----- ----- ----- */
