@@ -106,11 +106,16 @@ function showCart(elementsOfCart) {
     totalQuantity.innerText = `( ${parseInt(totalQ)} )`;
     totalPrice.innerText = `( ${totalP} )`;
 
-    //bouton pour supprimer les données
+    // bouton pour supprimer les données
     let deleteItem = document.querySelectorAll("p.deleteItem");
-
     // appelle de la fonction de suppression
     deleteItemOfCart(deleteItem);
+
+    // bouton pour changer quantité
+    let itemQuantity = document.querySelectorAll(".itemQuantity");
+    // appelle de la fonction de changement de quantité
+    ChangeQuantity(itemQuantity);
+
 }
 
 
@@ -140,6 +145,33 @@ function deleteItemOfCart(deleteItem) {
                 window.location.href = "cart.html";
             }
         });
+    }
+}
+
+// changement de quantité !!!!! PAS FINI !!!!!
+function ChangeQuantity(itemQuantity) {
+
+    let newQuantity = itemQuantity.value;
+    console.log("newQuantity");
+    console.log(newQuantity);
+
+    for(let l = 0; l < itemQuantity.length; l++) {
+
+        // changement de la quantité
+        itemQuantity[l].addEventListener("click", (event) => {
+            event.preventDefault();
+            
+
+           // while (newQuantity != elementsOfCart[l].quantity) {}
+
+                elementsOfCart[l].quantity = newQuantity;
+                cartToLocalStorage[l].quantity = newQuantity;
+                localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
+                //window.location.href = "cart.html";
+            
+            
+        });
+
     }
 }
 
