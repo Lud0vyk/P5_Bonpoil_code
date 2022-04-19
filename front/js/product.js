@@ -100,11 +100,25 @@
     if(selectedColor == "" || selectedQuantity == 0) {
         window.alert(`Veuillez choisir une couleur et une quantité`);
         window.location.href = `product.html?id=${productChoice._id}`;
-    }
-    
-    //si il y a déjà un produit dans le localStorage
-    if(cartToLocalStorage) {
-        cartToLocalStorage.push(cart);
+      
+    // si il y a déjà un produit dans le localStorage
+    } else if(cartToLocalStorage) {
+
+        let bool = true;
+
+         // si le produit existe déjà dans la même couleur
+        for ( let i = 0; i < cartToLocalStorage.length; i++) {
+
+            if( cartToLocalStorage[i].productId === productChoice._id && cartToLocalStorage[i].productColor === selectedColor ){
+                
+                cartToLocalStorage[i].productQuantity = parseInt(cartToLocalStorage[i].productQuantity) + parseInt(selectedQuantity);
+                bool = false;
+            } 
+        }
+        if (bool) {
+            cartToLocalStorage.push(cart);
+        }
+
         localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
         popup();
 
