@@ -6,7 +6,7 @@
  //récupération des éléments HTML pour l'affichage
  const cart__items = document.getElementById('cart__items');
  const totalQuantity = document.getElementById('totalQuantity');
- const totalPrice = document.getElementById('price');
+ const totalPrice = document.getElementById('totalPrice');
 
  // déclaration de la variable du LocalStorage pour récupérer les données du panier
  let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"));
@@ -111,6 +111,7 @@ function showCart(elementsOfCart) {
     // appelle de la fonction de suppression
     deleteItemOfCart(deleteItem);
 
+
     // bouton pour changer quantité
     let itemQuantity = document.querySelectorAll(".itemQuantity");
     // appelle de la fonction de changement de quantité
@@ -151,30 +152,26 @@ function deleteItemOfCart(deleteItem) {
 // changement de quantité !!!!! PAS FINI !!!!!
 function ChangeQuantity(itemQuantity) {
 
-    let newQuantity = itemQuantity.value;
-    console.log("newQuantity");
-    console.log(newQuantity);
 
-    for(let l = 0; l < itemQuantity.length; l++) {
+    for(let l = 0; l < itemQuantity.length; l++) {      
 
         // changement de la quantité
-        itemQuantity[l].addEventListener("click", (event) => {
+        itemQuantity[l].addEventListener("input", (event) => {
             event.preventDefault();
             
+            let newQuantity = itemQuantity[l].value;
 
-           // while (newQuantity != elementsOfCart[l].quantity) {}
-
-                elementsOfCart[l].quantity = newQuantity;
-                cartToLocalStorage[l].quantity = newQuantity;
+                //elementsOfCart[l].quantity = newQuantity;
+                cartToLocalStorage[l].productQuantity = newQuantity;
                 localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
-                //window.location.href = "cart.html";
-            
-            
+                location.reload();
+        
+                console.log("newQuantity");
+        console.log(newQuantity);
         });
-
+        
     }
 }
-
 
 /* ----- ----- ----- ----- ----- Envoi du formulaire ----- ----- ----- ----- ----- */
 
@@ -249,39 +246,45 @@ order.addEventListener("click", (event) => {
             document.querySelector("#addressErrorMsg").textContent = "";
             document.querySelector("#emailErrorMsg").textContent = "";
             localStorage.setItem("contact", JSON.stringify(contact));
+
+
+            let product = [];
+            for(let l = 0; elementsOfCart.length > l; l++ ) {
+
+                for(let m = 0; elementsOfCart[l].quantity > m; m++ ) {
+
+                    product.push(elementsOfCart[l].id); 
+                }
+            }
+
+            // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
+            let commande = {
+                products : product,
+                contact : contact
+            }
+
+            let promise = fetch("http://localhost:3000/api/products/order/", {
+                method : "POST",
+                body : JSON.stringify(commande),
+                headers : { "Content-type" : "application/json" }
+            });
+
+            promise.then((res) => res.json())
+            
+            .then((data) => {
+            const orderId = data.orderId
+            // nous envoi sur la page confirmation. Attention, si les inputs ne sont pas remplis correctement (voir variable check) ça nous enverras pas sur la page confirmation.
+            window.location.href = "../html/confirmation.html" + "?orderId=" + orderId;
+            return console.log(data);
+            })
+            // On catch si il y a une erreur.
+            .catch((err) => alert ("Erreur  d'envoi du formulaire. Veuillez réessayer plus tard."));
+
+
         }
     }
 
-    let product = [];
-    for(let l = 0; elementsOfCart.length > l; l++ ) {
-
-        for(let m = 0; elementsOfCart[l].quantity > m; m++ ) {
-
-            product.push(elementsOfCart[l].id); 
-        }
-    }
-
-    // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
-    let commande = {
-        products : product,
-        contact : contact
-    }
-
-    let promise = fetch("http://localhost:3000/api/products/order/", {
-        method : "POST",
-        body : JSON.stringify(commande),
-        headers : { "Content-type" : "application/json" }
-    });
-
-    promise.then(async(response)=> {
-
-        try {
-            let orderResponse = await response.json();
-
-        } catch(error) {
-            console.log(error);
-        }
-    });  
+    
 });
 
 

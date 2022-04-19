@@ -3,27 +3,27 @@
  ***                    DECLARATION VARIABLES                   ***
  ******************************************************************/
 
- //constante qui serviront à placer les élément dans le html
+ // constante qui serviront à placer les élément dans le html
  const kanapImage = document.getElementsByClassName('item__img');
  const kanapTitre = document.getElementById('title');
  const kanapPrice = document.getElementById('price');
  const kanapDescription = document.getElementById('description');
  const kanapColors = document.getElementById('colors');
 
- //récupération de l'id du produit
+ // récupération de l'id du produit
  let queryString_url_id = window.location.search;
  let urlSearchParams = new URLSearchParams(queryString_url_id);
  let id = urlSearchParams.get("id");
 
- //variable de récupération du produit
+ // variable de récupération du produit
  let productChoice;
 
 
- //sélection des données du panier
+ // sélection des données du panier
  const quantityKanap = document.querySelector("#quantity");
  const colorKanap = document.querySelector("#colors");
 
- //données à envoyer
+ // données à envoyer
  const addToCart = document.querySelector("#addToCart");
 
 
@@ -44,43 +44,42 @@
  }
 
  //fonction pour récupérer les produits
- function getProduct(){
-    return fetch('http://localhost:3000/api/products/')
+ function getProduct() {
+    return fetch('http://localhost:3000/api/products/'+id)
     .then( function(reponse) { return reponse.json()})
     .then( function(products) { return products})
     .catch( function (error) {alert ('error product')} )
  }
 
  //fonction asynchrone pour récupérer le produit
- async function mainProduct (){
+ async function mainProduct() {
 
-    const products = await getProduct();
-    let productById = products.find( (element)=> element._id === id);
+    const productById = await getProduct();
     showProductById(productById);
 
     return productChoice = productById;
  }
 
 
- //envoi du panier
- addToCart.addEventListener("click", (event) => {
+// envoi du panier
+addToCart.addEventListener("click", (event) => {
     event.preventDefault();
 
-    //récupération de la couleur
+    // récupération de la couleur
     const selectedColor = colorKanap.value;
-    //récupération de la quantité
+    // récupération de la quantité
     const selectedQuantity = quantityKanap.value;
 
-    //récupartion des valeurs du formulaire
+    // récupartion des valeurs du formulaire
     let cart = {
         productId : productChoice._id,
         productColor : selectedColor,
         productQuantity : selectedQuantity
     }
    
-   /* *** stockage des données *** */
+    /* *** stockage des données *** */
 
-    //fenêtre popup
+    // fenêtre popup qui s'ouvre lors de l'ajout d'un article
     function popup() {
 
         if(window.confirm(`${productChoice.name}
@@ -93,10 +92,10 @@
         }
     }
 
-    /* déclaration de la variable à envoyer dans le LocalStorage */
-    let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"))
+    // déclaration ou récupération de la variable du localStorage si elle n'esiste pas elle sera vide
+    let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"));
 
-    //si les condition ne sont pas réuni
+    // si les conditions ne sont pas réunies
     if(selectedColor == "" || selectedQuantity == 0) {
         window.alert(`Veuillez choisir une couleur et une quantité`);
         window.location.href = `product.html?id=${productChoice._id}`;
@@ -106,7 +105,7 @@
 
         let bool = true;
 
-         // si le produit existe déjà dans la même couleur
+        // si le produit existe déjà dans la même couleur
         for ( let i = 0; i < cartToLocalStorage.length; i++) {
 
             if( cartToLocalStorage[i].productId === productChoice._id && cartToLocalStorage[i].productColor === selectedColor ){
@@ -115,10 +114,9 @@
                 bool = false;
             } 
         }
-        if (bool) {
+        if(bool) {
             cartToLocalStorage.push(cart);
         }
-
         localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
         popup();
 
@@ -129,9 +127,7 @@
         localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
         popup();
     }
-    //console.log(cartToLocalStorage);
- });
-
+});
 
 
 /******************************************************************
