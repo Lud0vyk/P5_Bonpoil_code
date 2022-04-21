@@ -3,7 +3,7 @@
  ***                    DECLARATION VARIABLES                   ***
  ******************************************************************/
 
- //récupération des éléments HTML pour l'affichage
+ // récupération des éléments HTML pour l'affichage
  const cart__items = document.getElementById('cart__items');
  const totalQuantity = document.getElementById('totalQuantity');
  const totalPrice = document.getElementById('totalPrice');
@@ -16,9 +16,12 @@
  let elementsOfCart = [];
 
 
- 
-  //fonction asynchrone pour récupérer les produits et les afficher
-  async function mainCart() {
+/******************************************************************
+ ***                          FONCTIONS                         ***
+ ******************************************************************/
+
+ //fonction asynchrone pour récupérer les produits et les afficher
+ async function mainCart() {
     const products = await getProduct();
     cartElements(products);
     showCart(elementsOfCart);
@@ -33,35 +36,28 @@
      .catch( function (error) {alert ('error product')} )
  }
 
- //fonction qui met dans une variable les éléments récupéré dans le localStorage
-//et qui correspond à ceux de products retrouvé grace à id
+// fonction qui met dans une variable les éléments récupérés dans le localStorage
+// et qui correspondent à ceux de products retrouvé grace à id
 function cartElements(products) {
 
     let productById;
 
-    //a faire si besoin et à revoir
-    if(cartToLocalStorage === null) {
-        //alert("Votre panier est vide");
-        console.log("Le panier est vide");
-    } else {
-        console.log("Le panier n'est pas vide");
+    for (let i = 0; i < cartToLocalStorage.length; i++) {
 
-        for (let i = 0; i < cartToLocalStorage.length; i++) {
+        // méthode qui renvoie la valeur du premier élément trouvé dans le tableau qui respecte la condition
+        productById = products.find( (element)=> element._id === cartToLocalStorage[i].productId);
 
-            productById = products.find( (element)=> element._id === cartToLocalStorage[i].productId);
-
-            elementsOfCart[i] = {
-                id : productById._id,
-                name : productById.name,
-                color : cartToLocalStorage[i].productColor,
-                quantity : cartToLocalStorage[i].productQuantity,
-                price : productById.price,
-                img : productById.imageUrl,
-                alt : productById.altTxt
-            }
+        elementsOfCart[i] = {
+            id : productById._id,
+            name : productById.name,
+            color : cartToLocalStorage[i].productColor,
+            quantity : cartToLocalStorage[i].productQuantity,
+            price : productById.price,
+            img : productById.imageUrl,
+            alt : productById.altTxt
         }
-        return elementsOfCart;
     }
+    return elementsOfCart;
 }
 
 
@@ -108,21 +104,17 @@ function showCart(elementsOfCart) {
 
     // bouton pour supprimer les données
     let deleteItem = document.querySelectorAll("p.deleteItem");
-    // appelle de la fonction de suppression
+    // appel de la fonction de suppression
     deleteItemOfCart(deleteItem);
-
 
     // bouton pour changer quantité
     let itemQuantity = document.querySelectorAll(".itemQuantity");
-    // appelle de la fonction de changement de quantité
+    // appel de la fonction de changement de quantité
     ChangeQuantity(itemQuantity);
-
 }
 
 
-
 /* *** *** *** bouton supprimer et changement de quantité *** *** *** */
-
 //suppression d'un article
 function deleteItemOfCart(deleteItem) {
    
@@ -149,27 +141,21 @@ function deleteItemOfCart(deleteItem) {
     }
 }
 
-// changement de quantité !!!!! PAS FINI !!!!!
+// changement de quantité
 function ChangeQuantity(itemQuantity) {
-
 
     for(let l = 0; l < itemQuantity.length; l++) {      
 
-        // changement de la quantité
+        // changement de la quantité pour chaque input
         itemQuantity[l].addEventListener("input", (event) => {
             event.preventDefault();
             
             let newQuantity = itemQuantity[l].value;
 
-                //elementsOfCart[l].quantity = newQuantity;
-                cartToLocalStorage[l].productQuantity = newQuantity;
-                localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
-                location.reload();
-        
-                console.log("newQuantity");
-        console.log(newQuantity);
+            cartToLocalStorage[l].productQuantity = newQuantity;
+            localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
+            location.reload();
         });
-        
     }
 }
 
@@ -179,7 +165,6 @@ function ChangeQuantity(itemQuantity) {
  const order = document.querySelector("#order");
  console.log("order");
  console.log(order);
-
 
 order.addEventListener("click", (event) => {
     event.preventDefault();
@@ -247,7 +232,6 @@ order.addEventListener("click", (event) => {
             document.querySelector("#emailErrorMsg").textContent = "";
             localStorage.setItem("contact", JSON.stringify(contact));
 
-
             let product = [];
             for(let l = 0; elementsOfCart.length > l; l++ ) {
 
@@ -273,36 +257,16 @@ order.addEventListener("click", (event) => {
             
             .then((data) => {
             const orderId = data.orderId
-            // nous envoi sur la page confirmation. Attention, si les inputs ne sont pas remplis correctement (voir variable check) ça nous enverras pas sur la page confirmation.
+            // redirection vers la page confirmation
             window.location.href = "../html/confirmation.html" + "?orderId=" + orderId;
             return console.log(data);
             })
             // On catch si il y a une erreur.
-            .catch((err) => alert ("Erreur  d'envoi du formulaire. Veuillez réessayer plus tard."));
-
+            .catch((err) => alert ("Erreur d'envoi du formulaire. Veuillez réessayer plus tard."));
 
         }
-    }
-
-    
+    } 
 });
-
-
-
-/******************************************************************
- ***                          FONCTIONS                         ***
- ******************************************************************/
- /*fonction 1 get
- retourne un tableau de tout les éléments */  /* ok */
-
- /*fonction 2 get /id
- revoie l'élément correspondant à l'id du produit */
-
- /* fonction 3 post /order
- requête json contenant un objet de contact et un tableu produit et order id */
-
-
- 
      
  
 /******************************************************************
