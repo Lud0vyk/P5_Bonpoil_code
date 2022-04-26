@@ -124,18 +124,26 @@ function deleteItemOfCart(deleteItem) {
             event.preventDefault();
     
             // fenêtre de popup pour avertir l'utilisateur de la suppression
-            if ( window.confirm(`Souhaitez vous retirer ${elementsOfCart[k].name} de votre liste ? `)) {
+            if( window.confirm(`Souhaitez vous retirer ${elementsOfCart[k].name} de votre liste ? `)) {
     
                 // suppression de l'élément
                 cartToLocalStorage[k] = null;
                 // filtrage de l'élément null
                 cartToLocalStorage = cartToLocalStorage.filter( element => element !== null );
-                // mise à jour du panier dans le local storage
-                localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
+
+               // si le panier est vide destruction du panier sinon mise à jour du panier
+               if( cartToLocalStorage.length == 0 ) {
+
+                    localStorage.clear();
+
+                } else {
+
+                    // mise à jour du panier dans le local storage
+                    localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
+
+                }
                 window.location.href = "cart.html";
 
-            } else {
-                window.location.href = "cart.html";
             }
         });
     }
@@ -178,94 +186,102 @@ order.addEventListener("click", (event) => {
         email : document.querySelector("#email").value
     }
 
-    // vérification du formulaire
-    switch ("") {
+    // vérification si le panier est vide
+    if( localStorage.length == 0 ) {
 
-        case contact.firstName :
-            window.alert("Prénom manquant !");
-            break;
+        window.alert("Votre panier est vide !");
 
-        case contact.lastName :
-            window.alert("Nom manquant !");
-            break;
+    } else {
 
-        case contact.address :
-            window.alert("Adresse manquante !");
-            break;
+        // vérification du formulaire
+        switch ("") {
 
-        case contact.city :
-            window.alert("Ville manquante !");
-            break;
+            case contact.firstName :
+                window.alert("Prénom manquant !");
+                break;
 
-        case contact.email :
-            window.alert("Courriel manquant !");
-            break;
+            case contact.lastName :
+                window.alert("Nom manquant !");
+                break;
 
-        default:
+            case contact.address :
+                window.alert("Adresse manquante !");
+                break;
+
+            case contact.city :
+                window.alert("Ville manquante !");
+                break;
+
+            case contact.email :
+                window.alert("Courriel manquant !");
+                break;
+
+            default:
+                
+            // utilisation des regex pour vérifier les données du formulaire
+            if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
+                window.alert("Prénom incorrect !");
+                document.querySelector("#firstNameErrorMsg").textContent = "Veuillez remplir ce champ.";
             
-        // utilisation des regex pour vérifier les données du formulaire
-        if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
-            window.alert("Prénom incorrect !");
-            document.querySelector("#firstNameErrorMsg").textContent = "Veuillez remplir ce champ.";
-        
-        } else if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
-            window.alert("Nom incorrect !");
-            document.querySelector("#lastNameErrorMsg").textContent = "Veuillez remplir ce champ.";
+            } else if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
+                window.alert("Nom incorrect !");
+                document.querySelector("#lastNameErrorMsg").textContent = "Veuillez remplir ce champ.";
 
-        } else if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
-            window.alert("Ville incorrecte !");
-            document.querySelector("#cityErrorMsg").textContent = "Veuillez remplir ce champ.";
+            } else if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
+                window.alert("Ville incorrecte !");
+                document.querySelector("#cityErrorMsg").textContent = "Veuillez remplir ce champ.";
 
-        } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(contact.address)) ){
-            window.alert("Adresse incorrecte !");
-            document.querySelector("#addressErrorMsg").textContent = "Veuillez remplir ce champ.";
+            } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(contact.address)) ){
+                window.alert("Adresse incorrecte !");
+                document.querySelector("#addressErrorMsg").textContent = "Veuillez remplir ce champ.";
 
-        } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(contact.email))/*!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email))*/ ){
-            window.alert("Courriel incorrecte !");
-            document.querySelector("#emailErrorMsg").textContent = "Veuillez remplir ce champ.";
+            } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(contact.email))/*!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email))*/ ){
+                window.alert("Courriel incorrecte !");
+                document.querySelector("#emailErrorMsg").textContent = "Veuillez remplir ce champ.";
 
-        } else {
-            document.querySelector("#firstNameErrorMsg").textContent = "";
-            document.querySelector("#lastNameErrorMsg").textContent = "";
-            document.querySelector("#cityErrorMsg").textContent = "";
-            document.querySelector("#addressErrorMsg").textContent = "";
-            document.querySelector("#emailErrorMsg").textContent = "";
-            localStorage.setItem("contact", JSON.stringify(contact));
+            } else {
+                document.querySelector("#firstNameErrorMsg").textContent = "";
+                document.querySelector("#lastNameErrorMsg").textContent = "";
+                document.querySelector("#cityErrorMsg").textContent = "";
+                document.querySelector("#addressErrorMsg").textContent = "";
+                document.querySelector("#emailErrorMsg").textContent = "";
+                localStorage.setItem("contact", JSON.stringify(contact));
 
-            let product = [];
-            for(let l = 0; elementsOfCart.length > l; l++ ) {
+                let product = [];
+                for(let l = 0; elementsOfCart.length > l; l++ ) {
 
-                for(let m = 0; elementsOfCart[l].quantity > m; m++ ) {
+                    for(let m = 0; elementsOfCart[l].quantity > m; m++ ) {
 
-                    product.push(elementsOfCart[l].id); 
+                        product.push(elementsOfCart[l].id); 
+                    }
                 }
+
+                // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
+                let commande = {
+                    products : product,
+                    contact : contact
+                }
+
+                let promise = fetch("http://localhost:3000/api/products/order/", {
+                    method : "POST",
+                    body : JSON.stringify(commande),
+                    headers : { "Content-type" : "application/json" }
+                });
+
+                promise.then((res) => res.json())
+                
+                .then((data) => {
+                const orderId = data.orderId
+                // redirection vers la page confirmation
+                window.location.href = "../html/confirmation.html" + "?orderId=" + orderId;
+                return console.log(data);
+                })
+                // On catch si il y a une erreur.
+                .catch((err) => alert ("Erreur d'envoi du formulaire. Veuillez réessayer plus tard."));
+
             }
-
-            // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
-            let commande = {
-                products : product,
-                contact : contact
-            }
-
-            let promise = fetch("http://localhost:3000/api/products/order/", {
-                method : "POST",
-                body : JSON.stringify(commande),
-                headers : { "Content-type" : "application/json" }
-            });
-
-            promise.then((res) => res.json())
-            
-            .then((data) => {
-            const orderId = data.orderId
-            // redirection vers la page confirmation
-            window.location.href = "../html/confirmation.html" + "?orderId=" + orderId;
-            return console.log(data);
-            })
-            // On catch si il y a une erreur.
-            .catch((err) => alert ("Erreur d'envoi du formulaire. Veuillez réessayer plus tard."));
-
         }
-    } 
+    }
 });
      
  
