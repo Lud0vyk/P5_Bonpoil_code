@@ -51,7 +51,7 @@
     .catch( function (error) {alert ('error product')} )
  }
 
- //fonction asynchrone pour récupérer le produit
+ //fonction principale asynchrone pour récupérer le produit et l'afficher
  async function mainProduct() {
 
     const productById = await getProduct();
@@ -61,7 +61,7 @@
  }
 
 
-// envoi du panier
+// envoi du produit dans le panier
 addToCart.addEventListener("click", (event) => {
     event.preventDefault();
 
@@ -120,7 +120,7 @@ addToCart.addEventListener("click", (event) => {
         localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
         popup();
 
-    //si il n'y a rien dans le localStorage
+    // si il n'y a rien dans le localStorage
     } else {
         cartToLocalStorage = [];
         cartToLocalStorage.push(cart);

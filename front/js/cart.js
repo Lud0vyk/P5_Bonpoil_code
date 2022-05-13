@@ -12,7 +12,7 @@
  let cartToLocalStorage = JSON.parse(localStorage.getItem("cart"));
 
   
- //variable pour pouvoir utiliser ce qu'il y a dans le panier
+ // variable pour pouvoir utiliser ce qu'il y a dans le panier
  let elementsOfCart = [];
 
 
@@ -20,7 +20,7 @@
  ***                          FONCTIONS                         ***
  ******************************************************************/
 
- //fonction asynchrone pour récupérer les produits et les afficher
+ // fonction principale asynchrone qui appele toutes les autres
  async function mainCart() {
     const products = await getProduct();
     cartElements(products);
@@ -28,7 +28,7 @@
  }
  
 
- //fonction pour récupérer les produits
+ // fonction pour récupérer les produits
  function getProduct(){
      return fetch('http://localhost:3000/api/products/')
      .then( function(reponse) { return reponse.json()})
@@ -37,24 +37,27 @@
  }
 
 // fonction qui met dans une variable les éléments récupérés dans le localStorage
-// et qui correspondent à ceux de products retrouvé grace à id
+// et qui correspondent à ceux de products retrouvé grace à id, si le panier n'est pas null
 function cartElements(products) {
 
     let productById;
 
-    for (let i = 0; i < cartToLocalStorage.length; i++) {
+    if(cartToLocalStorage !== null) {
+    
+        for(let i = 0; i < cartToLocalStorage.length; i++) {
 
-        // méthode qui renvoie la valeur du premier élément trouvé dans le tableau qui respecte la condition
-        productById = products.find( (element)=> element._id === cartToLocalStorage[i].productId);
+            // méthode qui renvoie la valeur du premier élément trouvé dans le tableau qui respecte la condition
+            productById = products.find( (element)=> element._id === cartToLocalStorage[i].productId);
 
-        elementsOfCart[i] = {
-            id : productById._id,
-            name : productById.name,
-            color : cartToLocalStorage[i].productColor,
-            quantity : cartToLocalStorage[i].productQuantity,
-            price : productById.price,
-            img : productById.imageUrl,
-            alt : productById.altTxt
+            elementsOfCart[i] = {
+                id : productById._id,
+                name : productById.name,
+                color : cartToLocalStorage[i].productColor,
+                quantity : cartToLocalStorage[i].productQuantity,
+                price : productById.price,
+                img : productById.imageUrl,
+                alt : productById.altTxt
+            }
         }
     }
     return elementsOfCart;
@@ -131,7 +134,7 @@ function deleteItemOfCart(deleteItem) {
                 // filtrage de l'élément null
                 cartToLocalStorage = cartToLocalStorage.filter( element => element !== null );
 
-               // si le panier est vide destruction du panier sinon mise à jour du panier
+               // si le panier est vide suppression du panier sinon mise à jour du panier
                if( cartToLocalStorage.length == 0 ) {
 
                     localStorage.clear();
@@ -140,10 +143,9 @@ function deleteItemOfCart(deleteItem) {
 
                     // mise à jour du panier dans le local storage
                     localStorage.setItem("cart", JSON.stringify(cartToLocalStorage));
-
                 }
-                window.location.href = "cart.html";
 
+                window.location.href = "cart.html";
             }
         });
     }
@@ -174,6 +176,13 @@ function ChangeQuantity(itemQuantity) {
  console.log("order");
  console.log(order);
 
+ // fonction pour éviter les répétitions
+ function errorMessage (errorMessage) {
+ 
+    return document.querySelector(errorMessage).textContent = "Veuillez remplir ce champ.";
+ }
+
+// envoi du formulaire lors du clic sur commander si les conditions sont réunies
 order.addEventListener("click", (event) => {
     event.preventDefault();
 
@@ -221,23 +230,23 @@ order.addEventListener("click", (event) => {
             // utilisation des regex pour vérifier les données du formulaire
             if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
                 window.alert("Prénom incorrect !");
-                document.querySelector("#firstNameErrorMsg").textContent = "Veuillez remplir ce champ.";
+                errorMessage("#firstNameErrorMsg");
             
             } else if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
                 window.alert("Nom incorrect !");
-                document.querySelector("#lastNameErrorMsg").textContent = "Veuillez remplir ce champ.";
+                errorMessage("#lastNameErrorMsg");
 
             } else if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
                 window.alert("Ville incorrecte !");
-                document.querySelector("#cityErrorMsg").textContent = "Veuillez remplir ce champ.";
+                errorMessage("#cityErrorMsg");
 
-            } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(contact.address)) ){
+            } else if( !(/^[A-Za-z0-9'\.\-\s\,]{1,30}$/.test(contact.address)) ){
                 window.alert("Adresse incorrecte !");
-                document.querySelector("#addressErrorMsg").textContent = "Veuillez remplir ce champ.";
+                errorMessage("#addressErrorMsg");
 
-            } else if( !(/^[A-Za-z0-9\s]{1,30}$/.test(contact.email))/*!(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email))*/ ){
+            } else if( !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email)) ){
                 window.alert("Courriel incorrecte !");
-                document.querySelector("#emailErrorMsg").textContent = "Veuillez remplir ce champ.";
+                errorMessage("#emailErrorMsg");
 
             } else {
                 document.querySelector("#firstNameErrorMsg").textContent = "";
@@ -252,7 +261,7 @@ order.addEventListener("click", (event) => {
 
                     for(let m = 0; elementsOfCart[l].quantity > m; m++ ) {
 
-                        product.push(elementsOfCart[l].id); 
+                        product.push(elementsOfCart[l].id);
                     }
                 }
 
