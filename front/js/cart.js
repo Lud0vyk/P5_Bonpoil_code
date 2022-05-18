@@ -173,8 +173,6 @@ function ChangeQuantity(itemQuantity) {
 
  // bouton pour envoyer les données
  const order = document.querySelector("#order");
- console.log("order");
- console.log(order);
 
  // fonction pour éviter les répétitions
  function errorMessage (errorMessage) {
@@ -207,22 +205,27 @@ order.addEventListener("click", (event) => {
 
             case contact.firstName :
                 window.alert("Prénom manquant !");
+                errorMessage("#firstNameErrorMsg");
                 break;
 
             case contact.lastName :
                 window.alert("Nom manquant !");
+                errorMessage("#lastNameErrorMsg");
                 break;
 
             case contact.address :
                 window.alert("Adresse manquante !");
+                errorMessage("#addressErrorMsg");
                 break;
 
             case contact.city :
                 window.alert("Ville manquante !");
+                errorMessage("#cityErrorMsg");
                 break;
 
             case contact.email :
                 window.alert("Courriel manquant !");
+                errorMessage("#emailErrorMsg");
                 break;
 
             default:
@@ -249,11 +252,8 @@ order.addEventListener("click", (event) => {
                 errorMessage("#emailErrorMsg");
 
             } else {
-                document.querySelector("#firstNameErrorMsg").textContent = "";
-                document.querySelector("#lastNameErrorMsg").textContent = "";
-                document.querySelector("#cityErrorMsg").textContent = "";
-                document.querySelector("#addressErrorMsg").textContent = "";
-                document.querySelector("#emailErrorMsg").textContent = "";
+                /* J'ai voulu effacer les messages d'erreurs sauf que cela demanderait un rechargement de la page.
+                Or, si cela devait se produire alors les champs de formulaire déjà remplis seraient effacés également. */
                 localStorage.setItem("contact", JSON.stringify(contact));
 
                 let product = [];
@@ -265,28 +265,36 @@ order.addEventListener("click", (event) => {
                     }
                 }
 
-                // faire un tableau avec les produits et les informations client à envoyer en méthode post pour la confirmation
+                // Objet avec les produits et les informations client 
                 let commande = {
                     products : product,
                     contact : contact
                 }
 
+                // Objet envoyé en méthode post pour la confirmation
                 let promise = fetch("http://localhost:3000/api/products/order/", {
                     method : "POST",
                     body : JSON.stringify(commande),
                     headers : { "Content-type" : "application/json" }
                 });
 
+                /* Lors d'une exécutuion d'un code asynchrone, celui ci va nous retourner une promesse.
+                Une promesse peut être résolue avec un résultat ou rejetée avec une erreur.
+                Pour récupérer une promesse on peut utiliser la méthode "then" dès qu'elle est résolue 
+                et "catch" sera utilisé dès qu'une erreur sera détectée. */
                 promise.then((res) => res.json())
                 
                 .then((data) => {
-                const orderId = data.orderId
+                const orderId = data.orderId;
                 // redirection vers la page confirmation
                 window.location.href = "../html/confirmation.html" + "?orderId=" + orderId;
                 return console.log(data);
                 })
-                // On catch si il y a une erreur.
-                .catch((err) => alert ("Erreur d'envoi du formulaire. Veuillez réessayer plus tard."));
+                // On catch si il y a une erreur. On prévient l'utilisateur avec une alert et on affiche le statut dans la console.
+                .catch((err) => {
+                    alert ("Erreur d'envoi du formulaire. Veuillez réessayer plus tard.");
+                    console.log(data.status);
+                });
 
             }
         }

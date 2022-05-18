@@ -6,7 +6,7 @@
  //récupération des éléments HTML pour l'affichage
  const orderId = document.getElementById('orderId');
 
- //récupération de l'id 
+ //récupération de l'id de la commande
  let queryString_url_id = window.location.search;
  let urlSearchParams = new URLSearchParams(queryString_url_id);
  let id = urlSearchParams.get("orderId");
