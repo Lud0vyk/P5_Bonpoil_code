@@ -200,103 +200,76 @@ order.addEventListener("click", (event) => {
 
     } else {
 
-        // vérification du formulaire
-        switch ("") {
+        let succes = true;    
 
-            case contact.firstName :
-                window.alert("Prénom manquant !");
-                errorMessage("#firstNameErrorMsg");
-                break;
+        // utilisation des regex pour vérifier les données du formulaire
+        if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
+            errorMessage("#firstNameErrorMsg");
+            succes = false;
+        } 
+        if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
+            errorMessage("#lastNameErrorMsg");
+            succes = false;
+        }
+        if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
+            errorMessage("#cityErrorMsg");
+            succes = false;
+        }
+        if( !(/^[A-Za-z0-9'\.\-\s\,]{1,30}$/.test(contact.address)) ){
+            errorMessage("#addressErrorMsg");
+            succes = false;
+        }
+        if( !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email)) ){
+            errorMessage("#emailErrorMsg");
+            succes = false;
+        }
 
-            case contact.lastName :
-                window.alert("Nom manquant !");
-                errorMessage("#lastNameErrorMsg");
-                break;
+        if(succes) {
 
-            case contact.address :
-                window.alert("Adresse manquante !");
-                errorMessage("#addressErrorMsg");
-                break;
+            /* J'ai voulu effacer les messages d'erreurs sauf que cela demanderait un rechargement de la page.
+            Or, si cela devait se produire alors les champs de formulaire déjà remplis seraient effacés également. */
+            localStorage.setItem("contact", JSON.stringify(contact));
 
-            case contact.city :
-                window.alert("Ville manquante !");
-                errorMessage("#cityErrorMsg");
-                break;
+            let product = [];
+            for(let l = 0; elementsOfCart.length > l; l++ ) {
 
-            case contact.email :
-                window.alert("Courriel manquant !");
-                errorMessage("#emailErrorMsg");
-                break;
+                for(let m = 0; elementsOfCart[l].quantity > m; m++ ) {
 
-            default:
-                
-            // utilisation des regex pour vérifier les données du formulaire
-            if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
-                window.alert("Prénom incorrect !");
-                errorMessage("#firstNameErrorMsg");
-            
-            } else if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
-                window.alert("Nom incorrect !");
-                errorMessage("#lastNameErrorMsg");
-
-            } else if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
-                window.alert("Ville incorrecte !");
-                errorMessage("#cityErrorMsg");
-
-            } else if( !(/^[A-Za-z0-9'\.\-\s\,]{1,30}$/.test(contact.address)) ){
-                window.alert("Adresse incorrecte !");
-                errorMessage("#addressErrorMsg");
-
-            } else if( !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email)) ){
-                window.alert("Courriel incorrecte !");
-                errorMessage("#emailErrorMsg");
-
-            } else {
-                /* J'ai voulu effacer les messages d'erreurs sauf que cela demanderait un rechargement de la page.
-                Or, si cela devait se produire alors les champs de formulaire déjà remplis seraient effacés également. */
-                localStorage.setItem("contact", JSON.stringify(contact));
-
-                let product = [];
-                for(let l = 0; elementsOfCart.length > l; l++ ) {
-
-                    for(let m = 0; elementsOfCart[l].quantity > m; m++ ) {
-
-                        product.push(elementsOfCart[l].id);
-                    }
+                    product.push(elementsOfCart[l].id);
                 }
-
-                // Objet avec les produits et les informations client 
-                let commande = {
-                    products : product,
-                    contact : contact
-                }
-
-                // Objet envoyé en méthode post pour la confirmation
-                let promise = fetch("http://localhost:3000/api/products/order/", {
-                    method : "POST",
-                    body : JSON.stringify(commande),
-                    headers : { "Content-type" : "application/json" }
-                });
-
-                /* Lors d'une exécutuion d'un code asynchrone, celui ci va nous retourner une promesse.
-                Une promesse peut être résolue avec un résultat ou rejetée avec une erreur.
-                Pour récupérer une promesse on peut utiliser la méthode "then" dès qu'elle est résolue 
-                et "catch" sera utilisé dès qu'une erreur sera détectée. */
-                promise.then((res) => res.json())
-                
-                .then((data) => {
-                const orderId = data.orderId;
-                // redirection vers la page confirmation
-                window.location.href = "../html/confirmation.html" + "?orderId=" + orderId;
-                return console.log(data);
-                })
-                // On catch si il y a une erreur. On prévient l'utilisateur avec une alert et on affiche le statut dans la console.
-                .catch((err) => {
-                    alert ("Erreur d'envoi du formulaire. Veuillez réessayer plus tard.");
-                    console.log(data.status);
-                });
-
             }
+
+            // Objet avec les produits et les informations client 
+            let commande = {
+                products : product,
+                contact : contact
+            }
+
+            // Objet envoyé en méthode post pour la confirmation
+            let promise = fetch("http://localhost:3000/api/products/order/", {
+                method : "POST",
+                body : JSON.stringify(commande),
+                headers : { "Content-type" : "application/json" }
+            });
+
+            /* Lors d'une exécutuion d'un code asynchrone, celui ci va nous retourner une promesse.
+            Une promesse peut être résolue avec un résultat ou rejetée avec une erreur.
+            Pour récupérer une promesse on peut utiliser la méthode "then" dès qu'elle est résolue 
+            et "catch" sera utilisé dès qu'une erreur sera détectée. */
+            promise.then((res) => res.json())
+            
+            .then((data) => {
+            const orderId = data.orderId;
+            // redirection vers la page confirmation
+            window.location.href = "../html/confirmation.html" + "?orderId=" + orderId;
+            return console.log(data);
+            })
+            // On catch si il y a une erreur. On prévient l'utilisateur avec une alert et on affiche le statut dans la console.
+            .catch((err) => {
+                alert ("Erreur d'envoi du formulaire. Veuillez réessayer plus tard.");
+                console.log(data.status);
+            });
+
         }
     }
 });
