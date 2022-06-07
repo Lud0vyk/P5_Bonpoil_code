@@ -42,7 +42,11 @@ function cartElements(products) {
 
     let productById;
 
-    if(cartToLocalStorage !== null) {
+    // si le panier est vide
+    if(cartToLocalStorage === null) {
+        cart__items.innerHTML = `<h2>Votre panier est vide.</h2>`;
+
+    } else {
     
         for(let i = 0; i < cartToLocalStorage.length; i++) {
 
@@ -177,6 +181,7 @@ function ChangeQuantity(itemQuantity) {
  // fonction pour éviter les répétitions
  function errorMessage (errorMessage) {
  
+    
     return document.querySelector(errorMessage).textContent = "Veuillez remplir ce champ.";
  }
 
@@ -200,29 +205,50 @@ order.addEventListener("click", (event) => {
 
     } else {
 
-        let succes = true;    
+        let succes = false;
 
         // utilisation des regex pour vérifier les données du formulaire
-        if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
-            errorMessage("#firstNameErrorMsg");
-            succes = false;
-        } 
-        if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
-            errorMessage("#lastNameErrorMsg");
-            succes = false;
+        // si le champ est vide ou pas
+        if(contact.firstName == ""){
+            emptyField("#firstNameErrorMsg"); 
+        }else if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
+            errorField("#firstNameErrorMsg");
+        }else{
+            succes = true;
         }
-        if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
-            errorMessage("#cityErrorMsg");
-            succes = false;
+
+        if(contact.lastName == ""){
+            emptyField("#lastNameErrorMsg");
+        }else if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
+            errorField("#lastNameErrorMsg");
+        }else{
+            succes = true;
         }
-        if( !(/^[A-Za-z0-9'\.\-\s\,]{1,30}$/.test(contact.address)) ){
-            errorMessage("#addressErrorMsg");
-            succes = false;
+
+        if(contact.city == ""){
+            emptyField("#cityErrorMsg");
+        }else if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
+            errorField("#cityErrorMsg");
+        }else{
+            succes = true;
         }
-        if( !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email)) ){
-            errorMessage("#emailErrorMsg");
-            succes = false;
+
+        if(contact.address == ""){
+            emptyField("#addressErrorMsg");
+        }else if( !(/^[A-Za-z0-9'\.\-\s\,]{1,30}$/.test(contact.address)) ){
+            errorField("#addressErrorMsg");
+        }else{
+            succes = true;
         }
+
+        if(contact.email == ""){
+            emptyField("#emailErrorMsg");
+        }else if( !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email)) ){
+            errorField("#emailErrorMsg");
+        }else{
+            succes = true;
+        }
+
 
         if(succes) {
 
@@ -252,7 +278,7 @@ order.addEventListener("click", (event) => {
                 headers : { "Content-type" : "application/json" }
             });
 
-            /* Lors d'une exécutuion d'un code asynchrone, celui ci va nous retourner une promesse.
+            /* Lors d'une exécution d'un code asynchrone, celui ci va nous retourner une promesse.
             Une promesse peut être résolue avec un résultat ou rejetée avec une erreur.
             Pour récupérer une promesse on peut utiliser la méthode "then" dès qu'elle est résolue 
             et "catch" sera utilisé dès qu'une erreur sera détectée. */
