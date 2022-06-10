@@ -33,13 +33,19 @@
 
  // affichage des l'éléments dans product.html
  function showProductById (product) {
-     
-    kanapImage[0].innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}" >`;
-    kanapTitre.innerText = `(${product.name})`;
-    kanapPrice.innerText = `(${product.price})`;
-    kanapDescription.innerText = `(${product.description})`;
+    let image = document.createElement("img");
+    image.src = product.imageUrl;
+    image.alt = product.altTxt;
+    kanapImage[0].appendChild(image);
+    kanapTitre.innerText = product.name;
+    kanapPrice.innerText = product.price;
+    kanapDescription.innerText = product.description;
+    
     for(let color of product.colors) {
-        kanapColors.innerHTML +=`<option value="${color}">${color}</option>`;
+        let option = document.createElement("option");
+        option.value = color;
+        option.innerText = color;
+        kanapColors.appendChild(option);
     }
  }
 

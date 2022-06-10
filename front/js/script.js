@@ -29,13 +29,27 @@
  // création des balises HTML pour l'affichage
  function showProduct (product) {
     
-    showKanap.innerHTML += `<a href="./product.html?id=${product._id}" >
-        <article>
-            <img src="${product.imageUrl}" alt="${product.altTxt}" >
-            <h3 class=productName> ${product.name} </h3>
-            <p class=productDescription> ${product.description} </p>
-        </article>
-    </a>`;
+    let liens = document.createElement('a');
+    liens.href = `./product.html?id=${product._id}`;
+    showKanap.appendChild(liens);
+
+    let article = document.createElement('article');
+    showKanap.appendChild(liens).appendChild(article);
+    
+    let images = document.createElement("img");
+    images.src = product.imageUrl;
+    images.alt = product.altTxt;
+    showKanap.appendChild(liens).appendChild(article).appendChild(images);
+    
+    let kanapTitre = document.createElement("h3");
+    kanapTitre.classList.add("productName");
+    kanapTitre.innerText = product.name;
+    showKanap.appendChild(liens).appendChild(article).appendChild(kanapTitre);
+
+    let kanapDescription = document.createElement("p");
+    kanapDescription.classList.add("productDescription");
+    kanapDescription.innerText = product.description;
+    showKanap.appendChild(liens).appendChild(article).appendChild(kanapDescription);
  }
      
  

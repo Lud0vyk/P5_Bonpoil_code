@@ -44,10 +44,12 @@ function cartElements(products) {
 
     // si le panier est vide
     if(cartToLocalStorage === null) {
-        cart__items.innerHTML = `<h2>Votre panier est vide.</h2>`;
+        let emptyStorage = document.createElement('h3');
+        cart__items.appendChild(emptyStorage);
+        emptyStorage.textContent = "Votre panier est vide.";
 
     } else {
-    
+
         for(let i = 0; i < cartToLocalStorage.length; i++) {
 
             // méthode qui renvoie la valeur du premier élément trouvé dans le tableau qui respecte la condition
@@ -178,11 +180,15 @@ function ChangeQuantity(itemQuantity) {
  // bouton pour envoyer les données
  const order = document.querySelector("#order");
 
- // fonction pour éviter les répétitions
- function errorMessage (errorMessage) {
- 
-    
+ // fonction de champ vide 
+ function emptyField (errorMessage) {
+
     return document.querySelector(errorMessage).textContent = "Veuillez remplir ce champ.";
+ }
+ // fonction de champ incorrect
+ function errorField (errorMessage) {
+
+    return document.querySelector(errorMessage).textContent = "Veuillez remplir ce champ correctement.";
  }
 
 // envoi du formulaire lors du clic sur commander si les conditions sont réunies
@@ -205,7 +211,7 @@ order.addEventListener("click", (event) => {
 
     } else {
 
-        let succes = false;
+        let succes = 0;
 
         // utilisation des regex pour vérifier les données du formulaire
         // si le champ est vide ou pas
@@ -214,7 +220,7 @@ order.addEventListener("click", (event) => {
         }else if( !(/^([A-Za-z]{1,20})?([-]{0,1)?([A-Za-z]{1,20})$/.test(contact.firstName)) ){
             errorField("#firstNameErrorMsg");
         }else{
-            succes = true;
+            succes += 1;
         }
 
         if(contact.lastName == ""){
@@ -222,7 +228,7 @@ order.addEventListener("click", (event) => {
         }else if( !(/^[A-Za-z]{1,20}$/.test(contact.lastName)) ){
             errorField("#lastNameErrorMsg");
         }else{
-            succes = true;
+            succes += 1;
         }
 
         if(contact.city == ""){
@@ -230,7 +236,7 @@ order.addEventListener("click", (event) => {
         }else if( !(/^[A-Za-z]{1,20}$/.test(contact.city)) ){
             errorField("#cityErrorMsg");
         }else{
-            succes = true;
+            succes += 1;
         }
 
         if(contact.address == ""){
@@ -238,7 +244,7 @@ order.addEventListener("click", (event) => {
         }else if( !(/^[A-Za-z0-9'\.\-\s\,]{1,30}$/.test(contact.address)) ){
             errorField("#addressErrorMsg");
         }else{
-            succes = true;
+            succes += 1;
         }
 
         if(contact.email == ""){
@@ -246,11 +252,11 @@ order.addEventListener("click", (event) => {
         }else if( !(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(contact.email)) ){
             errorField("#emailErrorMsg");
         }else{
-            succes = true;
+            succes += 1;
         }
 
 
-        if(succes) {
+        if(succes === 5) {
 
             /* J'ai voulu effacer les messages d'erreurs sauf que cela demanderait un rechargement de la page.
             Or, si cela devait se produire alors les champs de formulaire déjà remplis seraient effacés également. */
